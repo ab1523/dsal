@@ -1,0 +1,223 @@
+/*Roll_No.-12132 ABHISHEK SHRIKRUSHNA DOKE
+
+Experiment-12
+Department maintains a student information. The file contains roll number, name,
+division and address. Allow user to add, delete information of student. Display
+information of particular employee. If record of student does not exist an
+appropriate message is displayed. If it is, then the system displays the student
+details. Use sequential file to main the data.
+
+
+Program:                                                                        */
+
+#include<iostream>
+#include<fstream>
+#include<string>
+using namespace std;
+
+class student {
+    struct stud {
+        int roll;
+        string name;
+        char div;
+        string add;
+    } rec;
+
+public:
+    void create();
+    void display();
+    bool search(int roll);
+    void Delete();
+};
+
+void student::create() {
+    char ans;
+    ofstream fout("stud.dat", ios::out | ios::binary);
+    do {
+        cout << "\nEnter Roll No of Student: ";
+        cin >> rec.roll;
+        cout << "Enter Name of Student: ";
+        cin >> rec.name;
+        cout << "Enter Division of Student: ";
+        cin >> rec.div;
+        cout << "Enter Address of Student: ";
+        cin >> rec.add;
+        fout.write(reinterpret_cast<char *>(&rec), sizeof(stud));
+        cout << "\nDo You Want to Add More Records? (y/n): ";
+        cin >> ans;
+    } while(tolower(ans) == 'y');
+    fout.close();
+}
+
+void student::display() {
+    ifstream fin("stud.dat", ios::in | ios::binary);
+    cout << "\nRoll\tName\tDiv\tAddress\n";
+    while (fin.read(reinterpret_cast<char *>(&rec), sizeof(stud))) {
+        cout << rec.roll << "\t" << rec.name << "\t" << rec.div << "\t" << rec.add << "\n";
+    }
+    fin.close();
+}
+
+bool student::search(int roll) {
+    ifstream fin("stud.dat", ios::in | ios::binary);
+    while (fin.read(reinterpret_cast<char *>(&rec), sizeof(stud))) {
+        if (rec.roll == roll) {
+            cout << "\nRecord Found:\n";
+            cout << "Roll\tName\tDiv\tAddress\n";
+            cout << rec.roll << "\t" << rec.name << "\t" << rec.div << "\t" << rec.add << "\n";
+            fin.close();
+            return true;
+        }
+    }
+    cout << "\nRecord Not Found!\n";
+    fin.close();
+    return false;
+}
+
+void student::Delete() {
+    int roll;
+    cout << "\nEnter the Roll No to delete: ";
+    cin >> roll;
+
+    fstream file("stud.dat", ios::in | ios::out | ios::binary);
+    if (!file) {
+        cout << "File not found!";
+        return;
+    }
+    while (file.read(reinterpret_cast<char *>(&rec), sizeof(stud))) {
+        if (rec.roll == roll) {
+            rec.roll = -1;
+            rec.name = "NULL";
+            rec.div = 'N';
+            rec.add = "NULL";
+            long pos = file.tellg();
+            file.seekp(pos - sizeof(stud));
+            file.write(reinterpret_cast<char *>(&rec), sizeof(stud));
+            cout << "Record Deleted Successfully!";
+            file.close();
+            return;
+        }
+    }
+    cout << "Record not found!";
+    file.close();
+}
+
+int main() {
+    student obj;
+    char ans;
+    do {
+        cout << "\n***** Student Information *****\n";
+        cout << "1. Create\n";
+        cout << "2. Display\n";
+        cout << "3. Delete\n";
+        cout << "4. Search\n";
+        cout << "5. Exit\n";
+        cout << "Enter Your Choice: ";
+        int ch;
+        cin >> ch;
+        switch(ch) {
+            case 1:
+                obj.create();
+                break;
+            case 2:
+                obj.display();
+                break;
+            case 3:
+                obj.Delete();
+                break;
+            case 4: {
+                int roll;
+                cout << "Enter Roll No to search: ";
+                cin >> roll;
+                obj.search(roll);
+                break;
+            }
+            case 5:
+                cout << "Exiting...\n";
+                break;
+            default:
+                cout << "Invalid Choice!\n";
+        }
+        cout << "\nDo You Want to Continue in Main Menu? (y/n): ";
+        cin >> ans;
+    } while(tolower(ans) == 'y');
+    return 0;
+}
+
+/*
+OUTPUT:
+
+***** Student Information *****
+1. Create
+2. Display
+3. Delete
+4. Search
+5. Exit
+..... Enter Your Choice: 1
+Enter Roll No of Student : 1
+Enter a Name of Student : AA
+Enter a Division of Student : A
+Enter a Address of Student : AAA
+Do You Want to Add More Records: y
+Enter Roll No of Student : 2
+Enter a Name of Student : BB
+Enter a Division of Student : B
+Enter a Address of Student : BBB
+Do You Want to Add More Records: y
+Enter Roll No of Student : 3
+Enter a Name of Student : CC
+Enter a Division of Student : C
+Enter a Address of Student : CCC
+Do You Want to Add More Records: n
+..... Do You Want to Continue in Main Menu: y
+***** Student Information *****
+1. Create
+2. Display
+3. Delete
+4. Search
+5. Exit
+..... Enter Your Choice: 2
+The Content of File are:
+Roll Name Div Address
+1 AA A AAA
+2 BB B BBB
+3 CC C CCC
+
+..... Do You Want to Continue in Main Menu: y
+***** Student Information *****
+1. Create
+2. Display
+3. Delete
+4. Search
+5. Exit
+..... Enter Your Choice: 4
+Enter a Roll No: 2
+Record Found...
+Roll Name Div Address
+2 BB B BBB
+..... Do You Want to Continue in Main Menu: y
+***** Student Information *****
+1. Create
+2. Display
+3. Delete
+4. Search
+5. Exit
+..... Enter Your Choice: 3
+Enter a Roll No: 2
+Record Found...
+Roll Name Div Address
+2 BB B BBB
+Record Deleted
+..... Do You Want to Continue in Main Menu: y
+***** Student Information *****
+1. Create
+2. Display
+3. Delete
+4. Search
+5. Exit
+..... Enter Your Choice: 2
+The Content of File are:
+Roll Name Div Address
+1 AA A AAA
+3 CC C CCC
+..... Do You Want to Continue in Main Menu:                                          */

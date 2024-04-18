@@ -1,0 +1,327 @@
+/*Roll_No.-12132 ABHISHEK SHRIKRUSHNA DOKE
+
+Experiment-13
+Company maintains employee information as employee ID, name, designation and salary. Allow user to add, delete information of employee. Display information of particular employee. Ifemployee does not exist an appropriate message is displayed. If it is, then the system displays theemployee details. Use index sequential file to maintain the data.
+
+
+Program:                                                                     */
+
+#include <iostream>
+#include <string>
+
+#define MAX_EMPLOYEES 20
+
+using namespace std;
+
+// Structure to represent an employee
+struct Employee {
+    string name;
+    long int code;
+    string designation;
+    int exp;
+    int age;
+};
+
+// Global variables
+Employee emp[MAX_EMPLOYEES];
+int num = 0;
+
+// Function prototypes
+void showMenu();
+void build();
+void insert();
+void deleteIndex(int i);
+void deleteRecord();
+void searchRecord();
+
+// Function to build the employee table
+void build() {
+    cout << "Build The Table\n";
+    cout << "Maximum Entries can be " << MAX_EMPLOYEES << "\n";
+
+    cout << "Enter the number of Entries required: ";
+    cin >> num;
+
+    if (num > MAX_EMPLOYEES) {
+        cout << "Maximum number of Entries are " << MAX_EMPLOYEES << "\n";
+        num = MAX_EMPLOYEES;
+    }
+
+    cout << "Enter the following data:\n";
+
+    for (int i = 0; i < num; i++) {
+        cout << "Name: ";
+        cin >> emp[i].name;
+
+        cout << "Employee ID: ";
+        cin >> emp[i].code;
+
+        cout << "Designation: ";
+        cin >> emp[i].designation;
+
+        cout << "Experience: ";
+        cin >> emp[i].exp;
+
+        cout << "Age: ";
+        cin >> emp[i].age;
+    }
+
+    showMenu();
+}
+
+// Function to insert a new entry
+void insert() {
+    if (num < MAX_EMPLOYEES) {
+        cout << "Enter the information of the Employee\n";
+        cout << "Name: ";
+        cin >> emp[num].name;
+
+        cout << "Employee ID: ";
+        cin >> emp[num].code;
+
+        cout << "Designation: ";
+        cin >> emp[num].designation;
+
+        cout << "Experience: ";
+        cin >> emp[num].exp;
+
+        cout << "Age: ";
+        cin >> emp[num].age;
+
+        num++;
+    }
+    else {
+        cout << "Employee Table Full\n";
+    }
+
+    showMenu();
+}
+
+// Function to delete record at index i
+void deleteIndex(int i) {
+    for (int j = i; j < num - 1; j++) {
+        emp[j] = emp[j + 1];
+    }
+}
+
+// Function to delete a record
+void deleteRecord() {
+    cout << "Enter the Employee ID to Delete Record: ";
+
+    long int code;
+    cin >> code;
+
+    bool found = false; // Flag to track if the employee ID is found
+
+    for (int i = 0; i < num; i++) {
+        if (emp[i].code == code) {
+            deleteIndex(i);
+            num--;
+            found = true;
+            cout << "Employee with ID " << code << " successfully deleted.\n";
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Employee with ID " << code << " not found.\n";
+    }
+
+    showMenu();
+}
+
+// Function to search for a record
+void searchRecord() {
+    cout << "Enter the Employee ID to Search Record: ";
+
+    long int code;
+    cin >> code;
+
+    bool found = false; // Flag to track if the employee ID is found
+
+    for (int i = 0; i < num; i++) {
+        if (emp[i].code == code) {
+            cout << "Name: " << emp[i].name << "\n";
+            cout << "Employee ID: " << emp[i].code << "\n";
+            cout << "Designation: " << emp[i].designation << "\n";
+            cout << "Experience: " << emp[i].exp << "\n";
+            cout << "Age: " << emp[i].age << "\n";
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Employee with ID " << code << " not found.\n";
+    }
+
+    showMenu();
+}
+
+// Function to show menu
+void showMenu() {
+    cout << "-------------------------\n";
+    cout << "Employee Management System\n";
+    cout << "-------------------------\n\n";
+
+    cout << "Available Options:\n\n";
+    cout << "Build Table          (1)\n";
+    cout << "Insert New Entry     (2)\n";
+    cout << "Delete Entry         (3)\n";
+    cout << "Search a Record      (4)\n";
+    cout << "Exit                 (5)\n";
+
+    int option;
+    cout << "Enter your choice: ";
+    cin >> option;
+
+    switch(option) {
+        case 1:
+            build();
+            break;
+        case 2:
+            insert();
+            break;
+        case 3:
+            deleteRecord();
+            break;
+        case 4:
+            searchRecord();
+            break;
+        case 5:
+            return;
+        default:
+            cout << "Invalid option. Please enter a valid option.\n";
+            showMenu();
+    }
+}
+
+// Driver code
+int main() {
+    showMenu();
+    return 0;
+}
+
+/*
+OUTPUT:
+
+-------------------------
+Employee Management System
+-------------------------
+
+Available Options:
+
+Build Table          (1)
+Insert New Entry     (2)
+Delete Entry         (3)
+Search a Record      (4)
+Exit                 (5)
+Enter your choice: 1
+Build The Table
+Maximum Entries can be 20
+Enter the number of Entries required: 2
+Enter the following data:
+Name: a
+Employee ID: 1
+Designation: 1
+Experience: 1
+Age: 1
+Name: s
+Employee ID: 2
+Designation: 2
+Experience: 2
+Age: 2
+-------------------------
+Employee Management System
+-------------------------
+
+Available Options:
+
+Build Table          (1)
+Insert New Entry     (2)
+Delete Entry         (3)
+Search a Record      (4)
+Exit                 (5)
+Enter your choice: 2
+Enter the information of the Employee
+Name: d
+Employee ID: 3
+Designation: 3
+Experience: 3
+Age: 3
+-------------------------
+Employee Management System
+-------------------------
+
+Available Options:
+
+Build Table          (1)
+Insert New Entry     (2)
+Delete Entry         (3)
+Search a Record      (4)
+Exit                 (5)
+Enter your choice: 3
+Enter the Employee ID to Delete Record: 3
+Employee with ID 3 successfully deleted.
+-------------------------
+Employee Management System
+-------------------------
+
+Available Options:
+
+Build Table          (1)
+Insert New Entry     (2)
+Delete Entry         (3)
+Search a Record      (4)
+Exit                 (5)
+Enter your choice: 4
+Enter the Employee ID to Search Record: 3
+Employee with ID 3 not found.
+-------------------------
+Employee Management System
+-------------------------
+
+Available Options:
+
+Build Table          (1)
+Insert New Entry     (2)
+Delete Entry         (3)
+Search a Record      (4)
+Exit                 (5)
+Enter your choice: 4
+Enter the Employee ID to Search Record: 2
+Name: s
+Employee ID: 2
+Designation: 2
+Experience: 2
+Age: 2
+-------------------------
+Employee Management System
+-------------------------
+
+Available Options:
+
+Build Table          (1)
+Insert New Entry     (2)
+Delete Entry         (3)
+Search a Record      (4)
+Exit                 (5)
+Enter your choice: 4
+Enter the Employee ID to Search Record: 1
+Name: a
+Employee ID: 1
+Designation: 1
+Experience: 1
+Age: 1
+-------------------------
+Employee Management System
+-------------------------
+
+Available Options:
+
+Build Table          (1)
+Insert New Entry     (2)
+Delete Entry         (3)
+Search a Record      (4)
+Exit                 (5)
+Enter your choice: 5                                                              */
